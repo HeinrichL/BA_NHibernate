@@ -6,6 +6,6 @@ namespace KursKomponente.AccessLayer
     public interface IKursServicesFuerRechnungen
     {
         Kurs FindKursById(int id);
-        IList<Kurs> GetAlleKurse();
+        IList<Kurs> GetKurseByVeranstaltungszeit(int monat, int jahr);
     }
 }

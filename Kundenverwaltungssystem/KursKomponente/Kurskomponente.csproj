@@ -57,9 +57,9 @@
     <Compile Include="AccessLayer\IKursServicesFuerRechnungen.cs" />
     <Compile Include="AccessLayer\KurskomponenteFacade.cs" />
     <Compile Include="BusinessLogicLayer\KursBusinessLogic.cs" />
-    <Compile Include="DataAccessLayer\Datatypes\VeranstaltungszeitTyp.cs" />
+    <Compile Include="Datatypes\VeranstaltungszeitTyp.cs" />
     <Compile Include="DataAccessLayer\Entities\Kurs.cs" />
-    <Compile Include="DataAccessLayer\Repository\KursRepo.cs" />
+    <Compile Include="DataAccessLayer\KursRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

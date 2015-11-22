@@ -13,6 +13,10 @@ namespace PersistenceService
     {
         private readonly ISession _session;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="session">Session Objekt (für Testzwecke)</param>
         public HibernateService()
         {
             _session = HibernateSessionFactory.OpenSession();
@@ -89,7 +93,7 @@ namespace PersistenceService
                 {
                     action.Invoke();
                     transaction.Commit();
-                    //_session.Flush();
+                    _session.Flush();
                 }
                 catch(StaleObjectStateException e)
                 {

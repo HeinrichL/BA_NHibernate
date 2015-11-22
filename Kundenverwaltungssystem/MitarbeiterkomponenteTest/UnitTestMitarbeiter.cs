@@ -22,19 +22,6 @@ namespace MitarbeiterkomponenteTest
             ts = (ITransactionService)ps;
             ms = new MitarbeiterkomponenteFacade(ps, ts);
 
-            r1 = new Rezeptionist()
-            {
-                Vorname = "Klaus",
-                Nachname = "Müller",
-                Personalnummer = "1123"
-            };
-
-            t1 = new Trainer()
-            {
-                Vorname = "Hans",
-                Nachname = "Schneider",
-                Personalnummer = "4456"
-            };
         }
 
         [TestInitialize]

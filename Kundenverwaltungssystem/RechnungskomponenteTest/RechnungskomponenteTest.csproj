@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0841F3B7-DE4F-449F-9B14-C411E1E62F19}</ProjectGuid>
+    <ProjectGuid>{ABF7D895-ED88-4F41-8470-66319AB23ADE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KundenkomponenteTest</RootNamespace>
-    <AssemblyName>KundenkomponenteTest</AssemblyName>
+    <RootNamespace>RechnungskomponenteTest</RootNamespace>
+    <AssemblyName>RechnungskomponenteTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -37,10 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net451\System.Data.SQLite.dll</HintPath>
@@ -60,7 +56,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTestKunde.cs" />
+    <Compile Include="UnitTestRechnungserstellung.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -69,16 +65,24 @@
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Kundenkomponente\Kundenkomponente.csproj">
-      <Project>{5B952893-823F-4F24-814D-27FB92902DAE}</Project>
+      <Project>{5b952893-823f-4f24-814d-27fb92902dae}</Project>
       <Name>Kundenkomponente</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KursKomponente\Kurskomponente.csproj">
+      <Project>{90002526-92b0-4d16-89fa-18b028c9b928}</Project>
+      <Name>Kurskomponente</Name>
     </ProjectReference>
     <ProjectReference Include="..\MitarbeiterKomponente\MitarbeiterKomponente.csproj">
       <Project>{9041d06f-c10a-41b4-a12a-406a4fc0f0d4}</Project>
       <Name>MitarbeiterKomponente</Name>
     </ProjectReference>
     <ProjectReference Include="..\PersistenceService\PersistenceService.csproj">
-      <Project>{26283CCB-EB70-4D71-9414-9172FA61CA85}</Project>
+      <Project>{26283ccb-eb70-4d71-9414-9172fa61ca85}</Project>
       <Name>PersistenceService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rechnungskomponente\Rechnungskomponente.csproj">
+      <Project>{a2cfdf88-daa3-4d22-9f3f-a7b43f763269}</Project>
+      <Name>Rechnungskomponente</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Common;
 using FluentNHibernate.Mapping;
 using Kundenkomponente.DataAccessLayer.Entities;
 using KursKomponente.DataAccessLayer.Datatypes;
@@ -31,6 +33,25 @@ namespace KursKomponente.DataAccessLayer
         public virtual bool HatFreiePlaetze(int anzahl = 1)
         {
             return Teilnehmer.Count + anzahl <= MaximaleTeilnehmeranzahl;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            if (obj == this) return true;
+            if (typeof(Kurs) != obj.GetType()) return false;
+
+            Kurs k = (Kurs)obj;
+
+            return ID == k.ID &&
+                   Titel == k.Titel &&
+                   Beschreibung == k.Beschreibung &&
+                   MaximaleTeilnehmeranzahl == k.MaximaleTeilnehmeranzahl &&
+                   Teilnehmer.SequenceEqual(k.Teilnehmer) &&
+                   Equals(Veranstaltungszeit, k.Veranstaltungszeit) &&
+                   Kursstatus == k.Kursstatus &&
+                   Equals(Kursleiter, k.Kursleiter) &&
+                   Equals(AngelegtVon, k.AngelegtVon);
         }
     }
 

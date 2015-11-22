@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Kundenkomponente.Accesslayer;
@@ -47,6 +48,14 @@ namespace KursKomponente.AccessLayer
         public IList<Kurs> GetAlleKurse()
         {
             return kursRepo.GetAllKurse();
+        }
+
+        public IList<Kurs> GetKurseByVeranstaltungszeit(int monat, int jahr)
+        {
+            Check.Argument(monat > 0 && monat <= 12, "Ungültiger Monat angegeben");
+            Check.Argument(jahr > 0 && DateTime.MinValue.Year <= DateTime.MaxValue.Year, "Ungültiges Jahr angegeben");
+
+            return kursRepo.GetKurseByVeransaltungszeit(monat, jahr);
         }
 
         public Kurs UpdateKurs(Kurs kurs)

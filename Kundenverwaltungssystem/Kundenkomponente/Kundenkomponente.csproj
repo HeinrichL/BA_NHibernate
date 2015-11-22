@@ -56,10 +56,10 @@
     <Compile Include="Accesslayer\IKundenServicesFuerKurse.cs" />
     <Compile Include="Accesslayer\IKundenServicesFuerRechnungen.cs" />
     <Compile Include="Accesslayer\KundenkomponenteFacade.cs" />
-    <Compile Include="DataAccessLayer\Datatypes\AdressTyp.cs" />
-    <Compile Include="DataAccessLayer\Datatypes\EmailTyp.cs" />
+    <Compile Include="Datatypes\AdressTyp.cs" />
+    <Compile Include="Datatypes\EmailTyp.cs" />
     <Compile Include="DataAccessLayer\Entities\Kunde.cs" />
-    <Compile Include="DataAccessLayer\Repository\KundenRepo.cs" />
+    <Compile Include="DataAccessLayer\KundenRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

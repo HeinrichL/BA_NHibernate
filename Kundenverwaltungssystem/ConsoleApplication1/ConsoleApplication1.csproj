@@ -57,9 +57,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1aba9fd9-d560-40fe-b151-4f5a767bd771}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Kundenkomponente\Kundenkomponente.csproj">
       <Project>{5B952893-823F-4F24-814D-27FB92902DAE}</Project>
       <Name>Kundenkomponente</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KursKomponente\Kurskomponente.csproj">
+      <Project>{90002526-92b0-4d16-89fa-18b028c9b928}</Project>
+      <Name>Kurskomponente</Name>
     </ProjectReference>
     <ProjectReference Include="..\MitarbeiterKomponente\MitarbeiterKomponente.csproj">
       <Project>{9041D06F-C10A-41B4-A12A-406A4FC0F0D4}</Project>
@@ -68,6 +76,10 @@
     <ProjectReference Include="..\PersistenceService\PersistenceService.csproj">
       <Project>{26283CCB-EB70-4D71-9414-9172FA61CA85}</Project>
       <Name>PersistenceService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rechnungskomponente\Rechnungskomponente.csproj">
+      <Project>{a2cfdf88-daa3-4d22-9f3f-a7b43f763269}</Project>
+      <Name>Rechnungskomponente</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Common;
 using Kundenkomponente.Accesslayer;
 using Kundenkomponente.DataAccessLayer.Datatypes;
 using Kundenkomponente.DataAccessLayer.Entities;
@@ -20,7 +22,6 @@ namespace KundenkomponenteTest
         static IKundenServices ks;
         static IMitarbeiterServices ms;
         
-
         static Kunde k1;
         static Rezeptionist r1;
 
@@ -33,6 +34,14 @@ namespace KundenkomponenteTest
             ms = new MitarbeiterkomponenteFacade(ps, ts);
 
             ks = new KundenkomponenteFacade(ps, ts, ms as IMitarbeiterServicesFuerKunden);
+
+            r1 = new Rezeptionist()
+            {
+                Vorname = "Rezep",
+                Nachname = "tionist",
+                Personalnummer = "12345"
+            };
+            ms.CreateRezeptionist(r1);
         }
 
         [TestInitialize]
@@ -48,21 +57,12 @@ namespace KundenkomponenteTest
                 Kundenstatus = Kundenstatus.Basic,
                 Telefonnummer = "123456"
             };
-
-            r1 = new Rezeptionist()
-                 {
-                     Vorname = "Rezep",
-                     Nachname = "tionist",
-                     Personalnummer = "12345"
-                 };
-            ms.CreateRezeptionist(r1);
         }
 
         [TestCleanup]
         public void After()
         {
             ps.DeleteAll<Kunde>();
-            ps.DeleteAll<Rezeptionist>();
         }
 
         [TestMethod]
@@ -96,8 +96,9 @@ namespace KundenkomponenteTest
                             Telefonnummer = "123456"
                         };
             ks.CreateKunde(k2, r1.ID);
+            IList<Kunde> expected = new List<Kunde>(new [] {k1, k2});
             IList<Kunde> kunden = ((IKundenServicesFuerKurse) ks).GetKundenByIds(new []{k1.Kundennummer, k2.Kundennummer}.ToList());
-            //Assert.AreEqual(k1, k2);
+            CollectionAssert.AreEqual(expected.ToList(), kunden.ToList());
         }
 
         [TestMethod]

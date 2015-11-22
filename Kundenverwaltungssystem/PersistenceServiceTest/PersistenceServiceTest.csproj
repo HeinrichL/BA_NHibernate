@@ -77,6 +77,10 @@
     <Compile Include="UnitTestPersistenceApi.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1aba9fd9-d560-40fe-b151-4f5a767bd771}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PersistenceService\PersistenceService.csproj">
       <Project>{26283ccb-eb70-4d71-9414-9172fa61ca85}</Project>
       <Name>PersistenceService</Name>

@@ -52,15 +52,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessLayer\IRechnungsServices.cs" />
+    <Compile Include="AccessLayer\RechnungskomponenteFacade.cs" />
+    <Compile Include="BusinessLogicLayer\RechnungsBusinessLogic.cs" />
+    <Compile Include="Datatypes\AbrechnungsZeitraumTyp.cs" />
+    <Compile Include="DataAccessLayer\Entities\Rechnung.cs" />
+    <Compile Include="DataAccessLayer\RechnungsRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AccessLayer\" />
-    <Folder Include="BusinessLogicLayer\" />
-    <Folder Include="DataAccessLayer\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1aba9fd9-d560-40fe-b151-4f5a767bd771}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kundenkomponente\Kundenkomponente.csproj">
+      <Project>{5b952893-823f-4f24-814d-27fb92902dae}</Project>
+      <Name>Kundenkomponente</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KursKomponente\Kurskomponente.csproj">
+      <Project>{90002526-92b0-4d16-89fa-18b028c9b928}</Project>
+      <Name>Kurskomponente</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PersistenceService\PersistenceService.csproj">
+      <Project>{26283ccb-eb70-4d71-9414-9172fa61ca85}</Project>
+      <Name>PersistenceService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

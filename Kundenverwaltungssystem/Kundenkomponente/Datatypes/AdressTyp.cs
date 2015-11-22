@@ -3,7 +3,7 @@
 namespace Kundenkomponente.DataAccessLayer.Datatypes
 {
     [Serializable]
-    public class AdressTyp
+    public struct AdressTyp
     {
         public string Strasse { get; }
         public string Hausnummer { get; }

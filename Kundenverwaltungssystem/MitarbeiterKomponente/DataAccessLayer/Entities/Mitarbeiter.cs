@@ -1,4 +1,6 @@
-﻿namespace MitarbeiterKomponente.DataAccessLayer.Entities
+﻿using Common;
+
+namespace MitarbeiterKomponente.DataAccessLayer.Entities
 {
     public class Mitarbeiter
     {

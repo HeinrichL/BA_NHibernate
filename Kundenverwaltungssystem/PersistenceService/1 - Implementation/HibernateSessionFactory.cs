@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Common;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
@@ -14,8 +15,8 @@ namespace PersistenceService.Implementation
 {
     public static class HibernateSessionFactory
     {
-        private const string ConnString = @"server=Thinkpad\SQLSERVER2012; Database=KundenverwaltungNHibernate;Integrated Security=SSPI;";
-        private const string ConnStringSQLite = "test.tb";
+        private const string ConnString = DatabaseConfig.ConnString;
+        private const string ConnStringSQLite = DatabaseConfig.ConnStringSQLite;
 
         private static ISessionFactory _sessionFactory;
 
@@ -39,8 +40,8 @@ namespace PersistenceService.Implementation
 
             if (sqlite)
                 fluentConfig.Database(SQLiteConfiguration.Standard
-                    //.UsingFile("test.db")
-                    .InMemory()
+                    .UsingFile(ConnStringSQLite)
+                    //.InMemory()
                     .ShowSql);
             else
             {
@@ -74,42 +75,19 @@ namespace PersistenceService.Implementation
 
             _sessionFactory = fluentConfig.ExposeConfiguration(cfg =>
                                                                {
-                                                                   if(sqlite)
-                                                                       config = cfg;
+                                                                   if (dropCreate)
+                                                                       new SchemaExport(cfg).Create(false, true);
                                                                    else
-                                                                   {
-                                                                       if (dropCreate)
-                                                                           new SchemaExport(cfg).Execute(false, true, false);
-                                                                       else
-                                                                           new SchemaUpdate(cfg).Execute(false, true);
-                                                                   }
-                                                          
-                                                          
-                                                      })
+                                                                       new SchemaUpdate(cfg).Execute(false, true);
+                                                               })
                                                       .BuildSessionFactory();
         }
-
-        public static void BuildSchema(ISession session)
-        {
-            new SchemaExport(config).Execute(true, true, false, session.Connection, null);
-        }
-
-        private static Configuration config;
 
         public static ISession OpenSession()
         {
             var session = SessionFactory.OpenSession();
-            BuildSchema(session);
+            //BuildSchema(session);
             return session;
         }
     }
-
-    //public class SqlStatementInterceptor : EmptyInterceptor
-    //{
-    //    public override NHibernate.SqlCommand.SqlString OnPrepareStatement(NHibernate.SqlCommand.SqlString sql)
-    //    {
-    //        Trace.WriteLine(sql.ToString());
-    //        return sql;
-    //    }
-    //}
 }

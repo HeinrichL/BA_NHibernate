@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Common;
 using Kundenkomponente.Accesslayer;
 using Kundenkomponente.DataAccessLayer.Datatypes;
 using Kundenkomponente.DataAccessLayer.Entities;
@@ -36,6 +38,7 @@ namespace KurskomponenteTest
         [ClassInitialize]
         public static void ClassInit(TestContext t)
         {
+            //File.Delete(DatabaseConfig.ConnStringSQLite);
             ps = new HibernateService();
             ts = (ITransactionService)ps;
 
@@ -44,11 +47,6 @@ namespace KurskomponenteTest
             kundenServices = new KundenkomponenteFacade(ps, ts, (IMitarbeiterServicesFuerKunden) ms);
             kursServices = new KurskomponenteFacade(ps, ts, kundenServices as IKundenServicesFuerKurse, ms as IMitarbeiterServicesFuerKurse);
 
-        }
-
-        [TestInitialize]
-        public void Before()
-        {
             t1 = new Trainer()
             {
                 Vorname = "Guter",
@@ -64,7 +62,11 @@ namespace KurskomponenteTest
 
             ms.CreateRezeptionist(r1);
             ms.CreateTrainer(t1);
+        }
 
+        [TestInitialize]
+        public void Before()
+        {
             ku1 = new Kunde()
             {
                 Vorname = "Klaus",
@@ -87,6 +89,7 @@ namespace KurskomponenteTest
                 Telefonnummer = "654321"
             };
             kundenServices.CreateKunde(ku2, r1.ID);
+
             k1 = new Kurs()
                  {
                      Titel = "Cooler Kurs",
@@ -111,11 +114,13 @@ namespace KurskomponenteTest
         [TestCleanup]
         public void After()
         {
-            ps.DeleteAll<Kurs>();
-            ps.DeleteAll<Kunde>();
-            ps.DeleteAll<Trainer>();
-            ps.DeleteAll<Rezeptionist>();
-            
+            if (ps.GetById<Kurs, int>(k1.ID) != null) ps.Delete(k1);
+            if (ps.GetById<Kurs, int>(k2.ID) != null) ps.Delete(k2);
+            kundenServices.DeleteKunde(ku1);
+            kundenServices.DeleteKunde(ku2);
+            //ps.DeleteAll<Trainer>();
+            //ps.DeleteAll<Rezeptionist>();
+
         }
 
         [TestMethod]
@@ -169,7 +174,7 @@ namespace KurskomponenteTest
 
             kursServices.DeleteKurs(k1);
 
-            Assert.AreEqual(0, kursServices.GetAlleKurse().Count);
+            Assert.IsFalse(kursServices.GetAlleKurse().Contains(k1));
         }
 
         [TestMethod]
@@ -179,7 +184,7 @@ namespace KurskomponenteTest
             kursServices.BucheKurs(ku1.Kundennummer, k1);
 
             Assert.IsTrue(k1.Teilnehmer.Contains(ku1));
-            Assert.IsTrue(k1.HatFreiePlaetze());
+            Assert.IsTrue(k1.HatFreiePlaetze(2));
         }
 
         [TestMethod]
@@ -203,36 +208,102 @@ namespace KurskomponenteTest
         [TestMethod]
         public void TestBucheKursFuerZweiKundenSuccess()
         {
+            kursServices.CreateKurs(k1, r1.ID, t1.ID);
+            List<int> kunden = new List<int>(new [] {ku1.Kundennummer, ku2.Kundennummer});
+            kursServices.BucheKurs(kunden, k1);
 
+            Assert.IsTrue(k1.Teilnehmer.Contains(ku1));
+            Assert.IsTrue(k1.Teilnehmer.Contains(ku2));
+            Assert.IsTrue(k1.HatFreiePlaetze(1));
         }
 
         [TestMethod]
         public void TestBucheKursFuerZweiKundenNurEinPlatzFrei()
         {
+            kursServices.CreateKurs(k2, r1.ID, t1.ID);
+            List<int> kunden = new List<int>(new[] { ku1.Kundennummer, ku2.Kundennummer });
 
+            try
+            {
+                kursServices.BucheKurs(kunden, k2);
+                Assert.Fail("Kurs sollte hier nicht genug Plätze haben");
+            }
+            catch(KursUeberfuelltException)
+            {
+                Assert.IsTrue(k2.HatFreiePlaetze(1));
+            }
         }
 
         [TestMethod]
         public void TestBucheEinenKundenAufAnderenKursUmSuccess()
         {
+            kursServices.CreateKurs(k1, r1.ID, t1.ID);
+            kursServices.CreateKurs(k2, r1.ID, t1.ID);
 
+            kursServices.BucheKurs(ku1.Kundennummer, k1);
+            kursServices.BucheKundenAufAnderenKursUm(ku1.Kundennummer, k1, k2);
+            Assert.IsFalse(k1.Teilnehmer.Contains(ku1));
+            Assert.IsTrue(k2.Teilnehmer.Contains(ku1));
         }
 
         [TestMethod]
         public void TestBucheEinenKundenAufAnderenKursUmKursVoll()
         {
+            kursServices.CreateKurs(k1, r1.ID, t1.ID);
+            kursServices.CreateKurs(k2, r1.ID, t1.ID);
 
+            kursServices.BucheKurs(ku1.Kundennummer, k2);
+            kursServices.BucheKurs(ku2.Kundennummer, k1);
+            try
+            {
+                kursServices.BucheKundenAufAnderenKursUm(ku2.Kundennummer, k1, k2);
+                Assert.Fail("Zielkurs sollte hier voll sein");
+            }
+            catch(KursUeberfuelltException)
+            {
+                Assert.IsFalse(k2.HatFreiePlaetze());
+            }
+            
         }
 
         [TestMethod]
         public void TestBucheZweiKundenAufAnderenKursUmSuccess()
         {
+            k2.MaximaleTeilnehmeranzahl = 2;
 
+            kursServices.CreateKurs(k1, r1.ID, t1.ID);
+            kursServices.CreateKurs(k2, r1.ID, t1.ID);
+
+            List<int> kunden = new List<int>(new[] { ku1.Kundennummer, ku2.Kundennummer });
+            kursServices.BucheKurs(kunden, k1);
+            kursServices.BucheKundenAufAnderenKursUm(kunden, k1, k2);
+
+            Assert.IsFalse(k1.Teilnehmer.Contains(ku1));
+            Assert.IsFalse(k1.Teilnehmer.Contains(ku2));
+            Assert.IsTrue(k2.Teilnehmer.Contains(ku1));
+            Assert.IsTrue(k2.Teilnehmer.Contains(ku1));
         }
 
         [TestMethod]
         public void TestBucheZweiKundenAufAnderenKursUmNurEinPlatzFrei()
         {
+            kursServices.CreateKurs(k1, r1.ID, t1.ID);
+            kursServices.CreateKurs(k2, r1.ID, t1.ID);
+
+            List<int> kunden = new List<int>(new[] { ku1.Kundennummer, ku2.Kundennummer });
+            kursServices.BucheKurs(kunden, k1);
+
+            try
+            {
+                kursServices.BucheKundenAufAnderenKursUm(kunden, k1, k2);
+                Assert.Fail("Zielkurs sollte hier nicht genug Platz haben");
+            }
+            catch(KursUeberfuelltException)
+            {
+                Assert.IsTrue(k1.HatFreiePlaetze(1));
+                Assert.IsTrue(k2.HatFreiePlaetze(1));
+            }
+
 
         }
     }

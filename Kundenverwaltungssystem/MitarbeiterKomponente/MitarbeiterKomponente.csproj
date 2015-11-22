@@ -59,7 +59,7 @@
     <Compile Include="DataAccessLayer\Entities\Mitarbeiter.cs" />
     <Compile Include="DataAccessLayer\Entities\Rezeptionist.cs" />
     <Compile Include="DataAccessLayer\Entities\Trainer.cs" />
-    <Compile Include="DataAccessLayer\Repository\MitarbeiterRepo.cs" />
+    <Compile Include="DataAccessLayer\MitarbeiterRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

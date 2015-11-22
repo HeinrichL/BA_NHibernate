@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using FluentNHibernate.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using NHibernate.Util;
@@ -114,7 +116,7 @@ namespace PersistenceServiceTest
             var delete = new[] {m2, m3};
             _ps.DeleteRange(delete);
             var all = _ps.GetAll<TestMember>();
-            res.Except(delete).ForEach(elem => Assert.IsTrue(all.Contains(elem)));
+            Enumerable.Except(res, delete).ForEach(elem => Assert.IsTrue(all.Contains(elem)));
             res.Intersect(delete).ForEach(elem => Assert.IsFalse(all.Contains(elem)));
         }
 

@@ -8,6 +8,7 @@ namespace KursKomponente.AccessLayer
         Kurs CreateKurs(Kurs kurs, int idRezeptionist, int idTrainer);
         Kurs FindKursById(int id);
         IList<Kurs> GetAlleKurse();
+        IList<Kurs> GetKurseByVeranstaltungszeit(int monat, int jahr);
         Kurs UpdateKurs(Kurs kurs);
         void DeleteKurs(Kurs kurs);
 

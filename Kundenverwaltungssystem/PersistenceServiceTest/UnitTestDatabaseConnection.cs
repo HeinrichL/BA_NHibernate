@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.IO;
+using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using PersistenceService.Implementation;
@@ -13,6 +15,7 @@ namespace PersistenceServiceTest
         [ClassInitialize]
         public static void Init(TestContext context)
         {
+            File.Delete(DatabaseConfig.ConnStringSQLite);
             _session = HibernateSessionFactory.OpenSession();
             //_session.CreateSQLQuery("IF OBJECT_ID('dbo.Testtable') IS NOT NULL DROP TABLE Testtable").ExecuteUpdate();
             _session.CreateSQLQuery("CREATE TABLE Testtable (ID int not null, Bla nvarchar(200))").ExecuteUpdate();

@@ -5,6 +5,7 @@ using FluentNHibernate.Mapping;
 
 namespace PersistenceServiceTest
 {
+    [Serializable]
     public abstract class Entity
     {
         public virtual int Version { get; set; }
@@ -43,6 +44,7 @@ namespace PersistenceServiceTest
         }
     }
 
+    [Serializable]
     public class TestMember : Entity
     {
         public TestMember() { }
