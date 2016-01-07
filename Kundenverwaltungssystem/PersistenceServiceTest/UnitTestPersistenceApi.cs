@@ -1,12 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using FluentNHibernate.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
 using NHibernate.Util;
 using PersistenceService;
-using PersistenceService.Implementation;
 
 namespace PersistenceServiceTest
 {

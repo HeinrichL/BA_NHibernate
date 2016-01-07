@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Kundenkomponente.Accesslayer;
 using Kundenkomponente.DataAccessLayer.Entities;
 using KursKomponente.AccessLayer;
 using KursKomponente.DataAccessLayer;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
-using PersistenceService.Implementation;
+using PersistenceService;
 
 namespace PersistenceServiceTest
 {

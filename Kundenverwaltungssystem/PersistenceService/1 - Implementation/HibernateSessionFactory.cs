@@ -8,10 +8,9 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Mapping;
 using NHibernate;
-using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 
-namespace PersistenceService.Implementation
+namespace PersistenceService
 {
     public static class HibernateSessionFactory
     {

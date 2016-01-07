@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Common;
 using Kundenkomponente.Accesslayer;
 using Kundenkomponente.DataAccessLayer.Datatypes;
 using Kundenkomponente.DataAccessLayer.Entities;
@@ -10,7 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PersistenceService;
 using MitarbeiterKomponente.AccessLayer;
 using MitarbeiterKomponente.DataAccessLayer.Entities;
-using Moq;
 
 namespace KundenkomponenteTest
 {
@@ -38,8 +35,7 @@ namespace KundenkomponenteTest
             r1 = new Rezeptionist()
             {
                 Vorname = "Rezep",
-                Nachname = "tionist",
-                Personalnummer = "12345"
+                Nachname = "tionist"
             };
             ms.CreateRezeptionist(r1);
         }

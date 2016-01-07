@@ -3,7 +3,7 @@ using System.IO;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHibernate;
-using PersistenceService.Implementation;
+using PersistenceService;
 
 namespace PersistenceServiceTest
 {

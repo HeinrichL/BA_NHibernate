@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Common;
 using Kundenkomponente.Accesslayer;
 using Kundenkomponente.DataAccessLayer.Datatypes;
 using Kundenkomponente.DataAccessLayer.Entities;
@@ -13,7 +11,6 @@ using KursKomponente.DataAccessLayer.Datatypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MitarbeiterKomponente.AccessLayer;
 using MitarbeiterKomponente.DataAccessLayer.Entities;
-using Moq;
 using PersistenceService;
 
 namespace KurskomponenteTest
@@ -50,14 +47,12 @@ namespace KurskomponenteTest
             t1 = new Trainer()
             {
                 Vorname = "Guter",
-                Nachname = "Trainer",
-                Personalnummer = "1122"
+                Nachname = "Trainer"
             };
             r1 = new Rezeptionist()
             {
                 Vorname = "Guter",
-                Nachname = "Rezeptionist",
-                Personalnummer = "1122"
+                Nachname = "Rezeptionist"
             };
 
             ms.CreateRezeptionist(r1);

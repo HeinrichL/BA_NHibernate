@@ -5,7 +5,6 @@ using System.Linq;
 using NHibernate;
 using NHibernate.Linq;
 using NHibernate.Util;
-using PersistenceService.Implementation;
 
 namespace PersistenceService
 {
@@ -13,10 +12,6 @@ namespace PersistenceService
     {
         private readonly ISession _session;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="session">Session Objekt (für Testzwecke)</param>
         public HibernateService()
         {
             _session = HibernateSessionFactory.OpenSession();

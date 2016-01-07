@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Common;
-using Kundenkomponente.Accesslayer;
 using KursKomponente.AccessLayer;
 using PersistenceService;
 using Rechnungskomponente.BusinessLogicLayer;

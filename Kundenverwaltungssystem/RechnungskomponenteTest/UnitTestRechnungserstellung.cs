@@ -51,15 +51,13 @@ namespace RechnungskomponenteTest
             r = new Rezeptionist()
             {
                 Vorname = "Rezep",
-                Nachname = "tionist",
-                Personalnummer = "1234"
+                Nachname = "tionist"
             };
             mitarbeiterServices.CreateRezeptionist(r);
             t = new Trainer()
             {
                 Vorname = "Guter",
-                Nachname = "Trainer",
-                Personalnummer = "4321"
+                Nachname = "Trainer"
             };
             mitarbeiterServices.CreateTrainer(t);
 

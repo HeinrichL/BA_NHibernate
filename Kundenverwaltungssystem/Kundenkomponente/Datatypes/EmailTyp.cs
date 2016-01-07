@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
 using System.Text.RegularExpressions;
 
 namespace Kundenkomponente.DataAccessLayer.Datatypes

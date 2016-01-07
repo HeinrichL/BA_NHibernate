@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NHibernate.Hql.Ast.ANTLR.Tree;
 using PersistenceService;
 using Rechnungskomponente.DataAccessLayer.Datatypes;
 using Rechnungskomponente.DataAccessLayer.Entities;

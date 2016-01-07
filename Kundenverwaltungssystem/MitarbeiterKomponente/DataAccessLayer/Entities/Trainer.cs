@@ -1,5 +1,4 @@
-﻿using Common;
-using FluentNHibernate.Mapping;
+﻿using FluentNHibernate.Mapping;
 
 namespace MitarbeiterKomponente.DataAccessLayer.Entities
 {
@@ -17,8 +16,7 @@ namespace MitarbeiterKomponente.DataAccessLayer.Entities
 
             return ID == t.ID &&
                    Vorname == t.Vorname &&
-                   Nachname == t.Nachname &&
-                   Personalnummer == t.Personalnummer;
+                   Nachname == t.Nachname;
         }
     }
 
@@ -28,7 +26,6 @@ namespace MitarbeiterKomponente.DataAccessLayer.Entities
         {
             Id(x => x.ID).GeneratedBy.Increment();
 
-            Map(x => x.Personalnummer).Unique();
             Map(x => x.Vorname);
             Map(x => x.Nachname);
         }

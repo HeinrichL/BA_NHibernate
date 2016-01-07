@@ -1,7 +1,6 @@
 ﻿using FluentNHibernate.Mapping;
 using Kundenkomponente.DataAccessLayer.Datatypes;
 using System;
-using Common;
 using MitarbeiterKomponente.DataAccessLayer.Entities;
 
 namespace Kundenkomponente.DataAccessLayer.Entities

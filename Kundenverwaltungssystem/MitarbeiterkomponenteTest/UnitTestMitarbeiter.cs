@@ -30,15 +30,13 @@ namespace MitarbeiterkomponenteTest
             r1 = new Rezeptionist()
             {
                 Vorname = "Klaus",
-                Nachname = "Müller",
-                Personalnummer = "1123"
+                Nachname = "Müller"
             };
 
             t1 = new Trainer()
             {
                 Vorname = "Hans",
-                Nachname = "Schneider",
-                Personalnummer = "4456"
+                Nachname = "Schneider"
             };
         }
 

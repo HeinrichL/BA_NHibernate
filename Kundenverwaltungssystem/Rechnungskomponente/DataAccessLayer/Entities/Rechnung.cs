@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using Common;
 using FluentNHibernate.Mapping;
 using Kundenkomponente.DataAccessLayer.Entities;
 using KursKomponente.DataAccessLayer;
