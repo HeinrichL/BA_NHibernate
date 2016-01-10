@@ -30,12 +30,12 @@ namespace KursKomponente.DataAccessLayer.Repository
 
         public IList<Kurs> GetKurseByVeransaltungszeit(int monat, int jahr)
         {
-            //return (from kurse in ps.Query<Kurs>()
-            //        where kurse.Veranstaltungszeit.StartZeitpunkt.Month == monat
-            //              && kurse.Veranstaltungszeit.StartZeitpunkt.Year == jahr
-            //        select kurse).ToList();
-            return GetAllKurse().Where(k => k.Veranstaltungszeit.StartZeitpunkt.Month == monat &&
-            k.Veranstaltungszeit.StartZeitpunkt.Year == jahr).ToList();
+            return (from kurse in ps.Query<Kurs>()
+                    where kurse.Veranstaltungszeit.StartZeitpunkt.Month == monat
+                          && kurse.Veranstaltungszeit.StartZeitpunkt.Year == jahr
+                    select kurse).ToList();
+            //return GetAllKurse().Where(k => k.Veranstaltungszeit.StartZeitpunkt.Month == monat &&
+            //k.Veranstaltungszeit.StartZeitpunkt.Year == jahr).ToList();
         }
 
         public void DeleteKurs(Kurs kurs)

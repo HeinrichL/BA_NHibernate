@@ -52,6 +52,13 @@ namespace Kundenkomponente.DataAccessLayer.Entities
             Map(x => x.Vorname);
             Map(x => x.Nachname);
             Map(x => x.Adresse);
+            //Component(x => x.Adresse, m =>
+            //{
+            //    m.Map(x => x.Strasse);
+            //    m.Map(x => x.Hausnummer);
+            //    m.Map(x => x.PLZ);
+            //    m.Map(x => x.Ort);
+            //});
             Map(x => x.EmailAdresse);
             Map(x => x.Telefonnummer);
             Map(x => x.Geburtsdatum);
