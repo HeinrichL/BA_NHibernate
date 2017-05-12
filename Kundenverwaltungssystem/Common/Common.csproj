@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Check.cs" />
     <Compile Include="DatabaseConfig.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

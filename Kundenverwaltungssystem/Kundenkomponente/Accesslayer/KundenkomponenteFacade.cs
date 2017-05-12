@@ -26,7 +26,7 @@ namespace Kundenkomponente.Accesslayer
         {
             Check.Argument(k != null, "Kunde darf nicht null sein");
             Check.Argument(k.Kundennummer == 0, "Kundennummer muss 0 sein");
-            Check.Argument(mitarbeiterId != 0, "Mitarbeiter ID darf nicht 0 sein");
+            //Check.Argument(mitarbeiterId != 0, "Mitarbeiter ID darf nicht 0 sein");
 
             Rezeptionist r = _mitarbeiterServices.FindRezeptionistById(mitarbeiterId);
             k.AngelegtVon = r;

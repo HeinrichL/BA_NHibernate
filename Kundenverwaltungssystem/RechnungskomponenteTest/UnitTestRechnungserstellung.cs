@@ -7,17 +7,18 @@ using Kundenkomponente.DataAccessLayer.Entities;
 using KursKomponente.AccessLayer;
 using KursKomponente.DataAccessLayer;
 using KursKomponente.DataAccessLayer.Datatypes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MitarbeiterKomponente.AccessLayer;
 using MitarbeiterKomponente.DataAccessLayer.Entities;
 using PersistenceService;
 using Rechnungskomponente.AccessLayer;
 using Rechnungskomponente.DataAccessLayer.Datatypes;
 using Rechnungskomponente.DataAccessLayer.Entities;
+using NUnit.Framework;
 
 namespace RechnungskomponenteTest
 {
-    [TestClass]
+    [TestFixture]
     public class UnitTestRechnungserstellung
     {
         private static IPersistenceService ps;
@@ -37,10 +38,10 @@ namespace RechnungskomponenteTest
         private static Kurs kurs1;
         private static Kurs kurs2;
 
-        [ClassInitialize]
+        [TestFixtureSetUp]
         public static void Init(TestContext context)
         {
-            ps = new HibernateService();
+            ps = new NHibernateService();
             ts = ps as ITransactionService;
 
             mitarbeiterServices = new MitarbeiterkomponenteFacade(ps, ts);
@@ -65,7 +66,7 @@ namespace RechnungskomponenteTest
             {
                 Vorname = "Klaus",
                 Nachname = "Müller",
-                Adresse = new AdressTyp("Berliner Tor", "7", "22091", "Hamburg"),
+                Adresse = new AdresseTyp("Berliner Tor", "7", "22091", "Hamburg"),
                 EmailAdresse = new EmailTyp("bla@test.de"),
                 Geburtsdatum = new DateTime(1990, 01, 01),
                 Kundenstatus = Kundenstatus.Basic,
@@ -76,7 +77,7 @@ namespace RechnungskomponenteTest
             {
                 Vorname = "Heinz",
                 Nachname = "Schmidt",
-                Adresse = new AdressTyp("Berliner Tor", "7", "22091", "Hamburg"),
+                Adresse = new AdresseTyp("Berliner Tor", "7", "22091", "Hamburg"),
                 EmailAdresse = new EmailTyp("bla2@test.de"),
                 Geburtsdatum = new DateTime(1995, 01, 01),
                 Kundenstatus = Kundenstatus.Premium,
@@ -108,8 +109,8 @@ namespace RechnungskomponenteTest
             kursServices.BucheKurs(kunde2.Kundennummer, kurs2);
         }
 
-        [TestCleanup]
-        public void Clean()
+        [TearDown]
+        public void After()
         {
             foreach (var rechnung in ps.GetAll<Rechnung>())
             {
@@ -117,7 +118,18 @@ namespace RechnungskomponenteTest
             }
         }
 
-        [TestMethod]
+        [TestFixtureTearDown]
+        public static void Clean()
+        {
+            ps.Delete(kurs1);
+            ps.Delete(kurs2);
+            ps.Delete(kunde1);
+            ps.Delete(kunde2);
+            ps.Delete(r);
+            ps.Delete(t);
+        }
+
+        [Test]
         public void TestMethodErstelleRechnungen()
         {
             IList<Rechnung> rechnungen = rechnungsServices.ErstelleRechnungen();
@@ -171,7 +183,7 @@ namespace RechnungskomponenteTest
             Assert.AreEqual(3, rechnungen.Sum(r => r.Rechnungspositionen.Count));
         }
 
-        [TestMethod]
+        [Test]
         public void TestFindByIdSuccess()
         {
             IList<Rechnung> rechnungen = rechnungsServices.ErstelleRechnungen();
@@ -181,7 +193,7 @@ namespace RechnungskomponenteTest
             Assert.AreEqual(re, rechnungen[0]);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetAlleRechnungen()
         {
             IList<Rechnung> rechnungen = rechnungsServices.ErstelleRechnungen();
@@ -191,16 +203,18 @@ namespace RechnungskomponenteTest
             CollectionAssert.AreEqual(re.ToList(), rechnungen.ToList());
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetRechnungenByAbrechnungszeitraum()
         {
             kurs2.Veranstaltungszeit = new VeranstaltungszeitTyp(DateTime.Now.AddMonths(-4), DateTime.Now.AddMonths(-4).AddHours(2));
             kursServices.UpdateKurs(kurs2);
 
             IList<Rechnung> rechnungen = rechnungsServices.ErstelleRechnungen();
+            IList<Rechnung> res = rechnungsServices.GetRechnungByAbrechnungsZeitraum(new AbrechnungsZeitraumTyp(DateTime.Now.Month, DateTime.Now.Year));
 
             //Nur 1 Kurs wird abgerechnet
             Assert.IsTrue(rechnungen.Count == 1);
+            CollectionAssert.AreEqual(res.ToList(), rechnungen.ToList());
         }
     }
 }

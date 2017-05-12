@@ -36,12 +36,12 @@ namespace KurskomponenteTest
         public static void ClassInit(TestContext t)
         {
             //File.Delete(DatabaseConfig.ConnStringSQLite);
-            ps = new HibernateService();
+            ps = new NHibernateService();
             ts = (ITransactionService)ps;
 
-            ms = new MitarbeiterkomponenteFacade(ps ,ts);
+            ms = new MitarbeiterkomponenteFacade(ps, ts);
 
-            kundenServices = new KundenkomponenteFacade(ps, ts, (IMitarbeiterServicesFuerKunden) ms);
+            kundenServices = new KundenkomponenteFacade(ps, ts, (IMitarbeiterServicesFuerKunden)ms);
             kursServices = new KurskomponenteFacade(ps, ts, kundenServices as IKundenServicesFuerKurse, ms as IMitarbeiterServicesFuerKurse);
 
             t1 = new Trainer()
@@ -57,16 +57,12 @@ namespace KurskomponenteTest
 
             ms.CreateRezeptionist(r1);
             ms.CreateTrainer(t1);
-        }
 
-        [TestInitialize]
-        public void Before()
-        {
             ku1 = new Kunde()
             {
                 Vorname = "Klaus",
                 Nachname = "Müller",
-                Adresse = new AdressTyp("Berliner Tor", "7", "22091", "Hamburg"),
+                Adresse = new AdresseTyp("Berliner Tor", "7", "22091", "Hamburg"),
                 EmailAdresse = new EmailTyp("bla@test.de"),
                 Geburtsdatum = new DateTime(1990, 01, 01),
                 Kundenstatus = Kundenstatus.Basic,
@@ -77,23 +73,27 @@ namespace KurskomponenteTest
             {
                 Vorname = "Heinz",
                 Nachname = "Schmidt",
-                Adresse = new AdressTyp("Berliner Tor", "7", "22091", "Hamburg"),
+                Adresse = new AdresseTyp("Berliner Tor", "7", "22091", "Hamburg"),
                 EmailAdresse = new EmailTyp("bla2@test.de"),
                 Geburtsdatum = new DateTime(1995, 01, 01),
                 Kundenstatus = Kundenstatus.Premium,
                 Telefonnummer = "654321"
             };
             kundenServices.CreateKunde(ku2, r1.ID);
+        }
 
+        [TestInitialize]
+        public void Before()
+        {
             k1 = new Kurs()
-                 {
-                     Titel = "Cooler Kurs",
-                     Beschreibung = "Dies ist eine Kursbeschreibung",
-                     MaximaleTeilnehmeranzahl = 3,
-                     Veranstaltungszeit =
+            {
+                Titel = "Cooler Kurs",
+                Beschreibung = "Dies ist eine Kursbeschreibung",
+                MaximaleTeilnehmeranzahl = 3,
+                Veranstaltungszeit =
                          new VeranstaltungszeitTyp(DateTime.Today.AddHours(13), DateTime.Today.AddHours(14)),
-                     Kursstatus = Kursstatus.Geplant
-                 };
+                Kursstatus = Kursstatus.Geplant
+            };
 
             k2 = new Kurs()
             {
@@ -106,16 +106,13 @@ namespace KurskomponenteTest
             };
         }
 
-        [TestCleanup]
-        public void After()
+        [ClassCleanup]
+        public static void After()
         {
-            if (ps.GetById<Kurs, int>(k1.ID) != null) ps.Delete(k1);
-            if (ps.GetById<Kurs, int>(k2.ID) != null) ps.Delete(k2);
             kundenServices.DeleteKunde(ku1);
             kundenServices.DeleteKunde(ku2);
-            //ps.DeleteAll<Trainer>();
-            //ps.DeleteAll<Rezeptionist>();
-
+            ps.Delete(r1);
+            ps.Delete(t1);
         }
 
         [TestMethod]
@@ -124,6 +121,7 @@ namespace KurskomponenteTest
             kursServices.CreateKurs(k1, r1.ID, t1.ID);
 
             Assert.IsTrue(k1.ID != 0);
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -134,6 +132,7 @@ namespace KurskomponenteTest
             Kurs kurs2 = kursServices.FindKursById(k1.ID);
 
             Assert.AreEqual(k1, kurs2);
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -148,6 +147,8 @@ namespace KurskomponenteTest
 
             IList<Kurs> alleKurse = kursServices.GetAlleKurse();
             CollectionAssert.AreEqual(kurse.ToList(), alleKurse.ToList());
+            ps.Delete(k1);
+            ps.Delete(k2);
         }
 
         [TestMethod]
@@ -160,6 +161,7 @@ namespace KurskomponenteTest
 
             Kurs kurs2 = kursServices.FindKursById(k1.ID);
             Assert.AreEqual(k1, kurs2);
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -180,6 +182,7 @@ namespace KurskomponenteTest
 
             Assert.IsTrue(k1.Teilnehmer.Contains(ku1));
             Assert.IsTrue(k1.HatFreiePlaetze(2));
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -194,9 +197,13 @@ namespace KurskomponenteTest
                 kursServices.BucheKurs(ku2.Kundennummer, k2);
                 Assert.Fail("Kurs sollte hier voll sein");
             }
-            catch(KursUeberfuelltException e)
+            catch (KursUeberfuelltException e)
             {
                 Assert.IsFalse(k2.HatFreiePlaetze());
+            }
+            finally
+            {
+                ps.Delete(k2);
             }
         }
 
@@ -204,12 +211,13 @@ namespace KurskomponenteTest
         public void TestBucheKursFuerZweiKundenSuccess()
         {
             kursServices.CreateKurs(k1, r1.ID, t1.ID);
-            List<int> kunden = new List<int>(new [] {ku1.Kundennummer, ku2.Kundennummer});
+            List<int> kunden = new List<int>(new[] { ku1.Kundennummer, ku2.Kundennummer });
             kursServices.BucheKurs(kunden, k1);
 
             Assert.IsTrue(k1.Teilnehmer.Contains(ku1));
             Assert.IsTrue(k1.Teilnehmer.Contains(ku2));
             Assert.IsTrue(k1.HatFreiePlaetze(1));
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -223,9 +231,13 @@ namespace KurskomponenteTest
                 kursServices.BucheKurs(kunden, k2);
                 Assert.Fail("Kurs sollte hier nicht genug Plätze haben");
             }
-            catch(KursUeberfuelltException)
+            catch (KursUeberfuelltException)
             {
                 Assert.IsTrue(k2.HatFreiePlaetze(1));
+            }
+            finally
+            {
+                ps.Delete(k2);
             }
         }
 
@@ -239,6 +251,9 @@ namespace KurskomponenteTest
             kursServices.BucheKundenAufAnderenKursUm(ku1.Kundennummer, k1, k2);
             Assert.IsFalse(k1.Teilnehmer.Contains(ku1));
             Assert.IsTrue(k2.Teilnehmer.Contains(ku1));
+
+            ps.Delete(k1);
+            ps.Delete(k2);
         }
 
         [TestMethod]
@@ -254,11 +269,15 @@ namespace KurskomponenteTest
                 kursServices.BucheKundenAufAnderenKursUm(ku2.Kundennummer, k1, k2);
                 Assert.Fail("Zielkurs sollte hier voll sein");
             }
-            catch(KursUeberfuelltException)
+            catch (KursUeberfuelltException)
             {
                 Assert.IsFalse(k2.HatFreiePlaetze());
             }
-            
+            finally
+            {
+                ps.Delete(k1);
+                ps.Delete(k2);
+            }
         }
 
         [TestMethod]
@@ -277,6 +296,9 @@ namespace KurskomponenteTest
             Assert.IsFalse(k1.Teilnehmer.Contains(ku2));
             Assert.IsTrue(k2.Teilnehmer.Contains(ku1));
             Assert.IsTrue(k2.Teilnehmer.Contains(ku1));
+
+            ps.Delete(k1);
+            ps.Delete(k2);
         }
 
         [TestMethod]
@@ -293,12 +315,16 @@ namespace KurskomponenteTest
                 kursServices.BucheKundenAufAnderenKursUm(kunden, k1, k2);
                 Assert.Fail("Zielkurs sollte hier nicht genug Platz haben");
             }
-            catch(KursUeberfuelltException)
+            catch (KursUeberfuelltException)
             {
                 Assert.IsTrue(k1.HatFreiePlaetze(1));
                 Assert.IsTrue(k2.HatFreiePlaetze(1));
             }
-
+            finally
+            {
+                ps.Delete(k1);
+                ps.Delete(k2);
+            }
 
         }
     }

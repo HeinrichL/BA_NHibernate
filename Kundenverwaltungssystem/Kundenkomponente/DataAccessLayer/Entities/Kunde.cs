@@ -2,6 +2,7 @@
 using Kundenkomponente.DataAccessLayer.Datatypes;
 using System;
 using MitarbeiterKomponente.DataAccessLayer.Entities;
+using Common;
 
 namespace Kundenkomponente.DataAccessLayer.Entities
 {
@@ -10,12 +11,12 @@ namespace Kundenkomponente.DataAccessLayer.Entities
         Basic, Premium, Gekuendigt
     }
 
-    public class Kunde
+    public class Kunde : Entity
     {
         public virtual int Kundennummer { get; set; }
         public virtual string Vorname { get; set; }
         public virtual string Nachname { get; set; }
-        public virtual AdressTyp Adresse { get; set; }
+        public virtual AdresseTyp Adresse { get; set; }
         public virtual EmailTyp EmailAdresse { get; set; }
         public virtual string Telefonnummer { get; set; }
         public virtual DateTime Geburtsdatum { get; set; }
@@ -49,20 +50,16 @@ namespace Kundenkomponente.DataAccessLayer.Entities
         public KundeMap()
         {
             Id(x => x.Kundennummer).GeneratedBy.Increment();
-            Map(x => x.Vorname);
+            Map(x => x.Vorname).Not.Nullable();
             Map(x => x.Nachname);
             Map(x => x.Adresse);
-            //Component(x => x.Adresse, m =>
-            //{
-            //    m.Map(x => x.Strasse);
-            //    m.Map(x => x.Hausnummer);
-            //    m.Map(x => x.PLZ);
-            //    m.Map(x => x.Ort);
-            //});
             Map(x => x.EmailAdresse);
             Map(x => x.Telefonnummer);
             Map(x => x.Geburtsdatum);
             Map(x => x.Kundenstatus);
+            Version(x => x.Version);
+            OptimisticLock.All().DynamicUpdate();
+            //DynamicUpdate();
             References(x => x.AngelegtVon);
         }
     }

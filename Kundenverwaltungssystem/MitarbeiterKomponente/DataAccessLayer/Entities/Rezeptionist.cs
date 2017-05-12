@@ -20,14 +20,11 @@ namespace MitarbeiterKomponente.DataAccessLayer.Entities
         }
     }
 
-    public class RezeptionistMap : ClassMap<Rezeptionist>
+    public class RezeptionistMap : SubclassMap<Rezeptionist>
     {
         public RezeptionistMap()
         {
-            Id(x => x.ID).GeneratedBy.Increment();
-
-            Map(x => x.Vorname);
-            Map(x => x.Nachname);
+            Table("Rezeptionist");
         }
     }
 }

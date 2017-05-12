@@ -21,7 +21,7 @@ namespace AnwendungskernFassade
 
         public AnwendungskernFacade()
         {
-            IPersistenceService persistenceService = new HibernateService();
+            IPersistenceService persistenceService = new NHibernateService();
             ITransactionService transactionService = (ITransactionService)persistenceService;
             mitarbeiterServices = new MitarbeiterkomponenteFacade(persistenceService, transactionService);
             kundenServices = new KundenkomponenteFacade(persistenceService, transactionService, mitarbeiterServices as IMitarbeiterServicesFuerKunden);

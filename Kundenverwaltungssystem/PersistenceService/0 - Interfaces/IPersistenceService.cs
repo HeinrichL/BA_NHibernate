@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NHibernate;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PersistenceService
@@ -12,14 +13,6 @@ namespace PersistenceService
         /// <param name="entity"></param>
         /// <returns></returns>
         T Save<T>(T entity) where T : class;
-
-        /// <summary>
-        /// Synchronisiert ein Objekt mit dem Datensatz aus der Datenbank
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        T Refresh<T>(T entity) where T : class;
 
         /// <summary>
         /// Speichert eine Liste von Entitäten in der Datenbank
@@ -53,23 +46,25 @@ namespace PersistenceService
         void Delete<T>(T entity) where T : class;
 
         /// <summary>
-        /// Löscht das Objekt aus der DB
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        void DeleteRange<T>(IList<T> entities) where T : class;
-
-        /// <summary>
-        /// Löscht das Objekt aus der DB
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        void DeleteAll<T>() where T : class;
-
-        /// <summary>
         /// Gibt ein IQueryable-Objekt zurück, auf das mit LINQ zugegriffen werden kann
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IQueryable<T> Query<T>() where T : class;
+
+        /// <summary>
+        /// Gibt ein IQuery-Objekt zurück, über das HQL-Anfragen ausgeführt werden können
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        IQuery Query(string query);
+
+        /// <summary>
+        /// Gibt ein ICriteria-Objekt für Querys über die ICriteria-API zurück
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        ICriteria QueryByCriteria<T>() where T : class;
     }
 }

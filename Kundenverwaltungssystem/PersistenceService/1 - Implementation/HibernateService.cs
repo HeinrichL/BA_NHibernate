@@ -8,11 +8,11 @@ using NHibernate.Util;
 
 namespace PersistenceService
 {
-    public class HibernateService : IPersistenceService, ITransactionService
+    public class NHibernateService : IPersistenceService, ITransactionService
     {
-        private readonly ISession _session;
+        public ISession _session { get; }
 
-        public HibernateService()
+        public NHibernateService()
         {
             _session = HibernateSessionFactory.OpenSession();
         }
@@ -21,12 +21,6 @@ namespace PersistenceService
         {
             _session.SaveOrUpdate(entity);
             _session.Flush();
-            return entity;
-        }
-
-        public T Refresh<T>(T entity) where T : class
-        {
-            _session.Refresh(entity);
             return entity;
         }
 
@@ -56,28 +50,19 @@ namespace PersistenceService
             _session.Flush();
         }
 
-        public void DeleteRange<T>(IList<T> entities) where T : class
-        {
-            using (var trans = _session.BeginTransaction())
-            {
-                entities.ForEach(x => _session.Delete(x));
-                trans.Commit();
-            }
-        }
-
-        public void DeleteAll<T>() where T : class
-        {
-            string name = typeof(T).Name;
-            using (var trans = _session.BeginTransaction())
-            {
-                _session.CreateQuery("DELETE from " + name).ExecuteUpdate();
-                trans.Commit();
-            }
-        }
-
         public IQueryable<T> Query<T>() where T : class
         {
             return _session.Query<T>();
+        }
+
+        public IQuery Query(string query)
+        {
+            return _session.CreateQuery(query);
+        }
+
+        public ICriteria QueryByCriteria<T>() where T : class
+        {
+            return _session.CreateCriteria<T>();
         }
 
         public void ExecuteInTransaction(Action action)

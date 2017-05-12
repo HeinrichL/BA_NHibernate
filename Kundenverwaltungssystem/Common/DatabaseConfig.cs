@@ -2,7 +2,6 @@
 {
     public static class DatabaseConfig
     {
-        public const string ConnString = @"server=Thinkpad\SQLSERVER2012; Database=KundenverwaltungNHibernate;Integrated Security=SSPI;";
-        public const string ConnStringSQLite = "test.db";
+        public const string ConnString = @"server=DESKTOP\SQLSERVERDEV; Database=KundenverwaltungNHibernate;Integrated Security=SSPI;";
     }
 }

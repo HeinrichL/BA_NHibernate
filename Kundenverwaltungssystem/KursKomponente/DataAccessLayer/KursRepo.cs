@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PersistenceService;
+using NHibernate.Criterion;
+using Kundenkomponente.DataAccessLayer.Entities;
+using System;
 
 namespace KursKomponente.DataAccessLayer.Repository
 {
@@ -34,8 +37,11 @@ namespace KursKomponente.DataAccessLayer.Repository
                     where kurse.Veranstaltungszeit.StartZeitpunkt.Month == monat
                           && kurse.Veranstaltungszeit.StartZeitpunkt.Year == jahr
                     select kurse).ToList();
-            //return GetAllKurse().Where(k => k.Veranstaltungszeit.StartZeitpunkt.Month == monat &&
-            //k.Veranstaltungszeit.StartZeitpunkt.Year == jahr).ToList();
+            //return ps.Query(@"from Kurs as kurse where month(kurse.Veranstaltungszeit.StartZeitpunkt) = :monat
+            //                    and year(kurse.Veranstaltungszeit.StartZeitpunkt) = :jahr")
+            //                    .SetParameter("monat", monat)
+            //                    .SetParameter("jahr", jahr)
+            //                    .List<Kurs>();
         }
 
         public void DeleteKurs(Kurs kurs)

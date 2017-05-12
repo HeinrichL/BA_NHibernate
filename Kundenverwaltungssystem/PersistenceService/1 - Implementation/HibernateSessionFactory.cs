@@ -15,7 +15,6 @@ namespace PersistenceService
     public static class HibernateSessionFactory
     {
         private const string ConnString = DatabaseConfig.ConnString;
-        private const string ConnStringSQLite = DatabaseConfig.ConnStringSQLite;
 
         private static ISessionFactory _sessionFactory;
 
@@ -24,11 +23,7 @@ namespace PersistenceService
             get
             {
                 if (_sessionFactory == null)
-#if DEBUG
-                    InitializeSessionFactory(true, true);
-#else
                     InitializeSessionFactory();
-#endif
                 return _sessionFactory;
             }
 
@@ -37,17 +32,10 @@ namespace PersistenceService
         {
             FluentConfiguration fluentConfig = Fluently.Configure();
 
-            if (sqlite)
-                fluentConfig.Database(SQLiteConfiguration.Standard
-                    .UsingFile(ConnStringSQLite)
-                    //.InMemory()
-                    .ShowSql);
-            else
-            {
-                fluentConfig.Database(MsSqlConfiguration.MsSql2012
-                    .ConnectionString(ConnString)
-                    .ShowSql);
-            }
+            fluentConfig.Database(MsSqlConfiguration.MsSql2012
+            .ConnectionString(ConnString).AdoNetBatchSize(50)
+            .ShowSql);
+
 
             //// Aus Softwareprojekt SS 2014 - PersistenceServicesFactory
             // get all user assemblies
@@ -75,7 +63,12 @@ namespace PersistenceService
             _sessionFactory = fluentConfig.ExposeConfiguration(cfg =>
                                                                {
                                                                    if (dropCreate)
-                                                                       new SchemaExport(cfg).Create(false, true);
+                                                                   {
+                                                                       var se = new SchemaExport(cfg);
+                                                                       se.Drop(true, true);
+                                                                       se.Create(true, true);
+                                                                   }
+
                                                                    else
                                                                        new SchemaUpdate(cfg).Execute(false, true);
                                                                })
@@ -84,9 +77,7 @@ namespace PersistenceService
 
         public static ISession OpenSession()
         {
-            var session = SessionFactory.OpenSession();
-            //BuildSchema(session);
-            return session;
+            return SessionFactory.OpenSession();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using PersistenceService;
 using Rechnungskomponente.DataAccessLayer.Datatypes;
 using Rechnungskomponente.DataAccessLayer.Entities;
+using NHibernate.Criterion;
 
 namespace Rechnungskomponente.DataAccessLayer
 {

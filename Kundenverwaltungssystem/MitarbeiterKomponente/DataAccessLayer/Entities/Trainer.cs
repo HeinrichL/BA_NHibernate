@@ -20,14 +20,11 @@ namespace MitarbeiterKomponente.DataAccessLayer.Entities
         }
     }
 
-    public class TrainerMap : ClassMap<Trainer>
+    public class TrainerMap : SubclassMap<Trainer>
     {
         public TrainerMap()
         {
-            Id(x => x.ID).GeneratedBy.Increment();
-
-            Map(x => x.Vorname);
-            Map(x => x.Nachname);
+            Table("Trainer");
         }
     }
 }

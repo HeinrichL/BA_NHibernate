@@ -33,7 +33,7 @@ namespace PersistenceServiceTest
         [TestInitialize]
         public void TestInitialize()
         {
-            _ps = new HibernateService();
+            _ps = new NHibernateService();
             _ts = (ITransactionService)_ps;
         }
 
@@ -90,34 +90,6 @@ namespace PersistenceServiceTest
         }
 
         [TestMethod]
-        public void TestMethodDeleteAll()
-        {
-            TestMember m = new TestMember() { Hehe = DateTime.Now };
-            TestMember m2 = new TestMember() { Hehe = DateTime.Now };
-            TestMember m3 = new TestMember() { Hehe = DateTime.Now };
-            TestMember m4 = new TestMember() { Hehe = DateTime.Now };
-            _ps.SaveAll(new[] { m, m2, m3, m4 });
-            _ps.DeleteAll<TestMember>();
-            var all = _ps.GetAll<TestMember>();
-            Assert.AreEqual(0, all.Count);
-        }
-
-        [TestMethod]
-        public void TestMethodDeleteRange()
-        {
-            TestMember m = new TestMember() { Hehe = DateTime.Now };
-            TestMember m2 = new TestMember() { Hehe = DateTime.Now };
-            TestMember m3 = new TestMember() { Hehe = DateTime.Now };
-            TestMember m4 = new TestMember() { Hehe = DateTime.Now };
-            var res = _ps.SaveAll(new[] { m, m2, m3, m4 });
-            var delete = new[] {m2, m3};
-            _ps.DeleteRange(delete);
-            var all = _ps.GetAll<TestMember>();
-            Enumerable.Except(res, delete).ForEach(elem => Assert.IsTrue(all.Contains(elem)));
-            res.Intersect(delete).ForEach(elem => Assert.IsFalse(all.Contains(elem)));
-        }
-
-        [TestMethod]
         public void TestMethodQuery()
         {
             TestMember m = new TestMember() { Hehe = DateTime.Now };
@@ -142,7 +114,7 @@ namespace PersistenceServiceTest
 
             _ps.Save(m);
 
-            IPersistenceService ps2 = new HibernateService();
+            IPersistenceService ps2 = new NHibernateService();
             ITransactionService ts2 = (ITransactionService)ps2;
             TestMember mConcurrent = ps2.GetById<TestMember, int>(m.ID);
 
@@ -161,7 +133,6 @@ namespace PersistenceServiceTest
             catch(Exception e)
             {
                 Assert.AreEqual(typeof(StaleObjectStateException), e.GetType());
-                Assert.AreEqual(_ps.Refresh(m), mConcurrent);
             }
         }
 
@@ -171,7 +142,7 @@ namespace PersistenceServiceTest
             TestMember m = new TestMember() { Hehe = DateTime.Now.AddDays(12) };
             _ps.Save(m);
 
-            IPersistenceService ps2 = new HibernateService();
+            IPersistenceService ps2 = new NHibernateService();
             ITransactionService ts2 = (ITransactionService)ps2;
             TestMember mConcurrent = ps2.GetById<TestMember, int>(m.ID);
 

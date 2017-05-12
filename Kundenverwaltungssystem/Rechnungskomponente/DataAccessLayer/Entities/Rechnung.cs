@@ -57,7 +57,11 @@ namespace Rechnungskomponente.DataAccessLayer.Entities
         {
             Id(x => x.Rechnungsnummer).GeneratedBy.Increment();
 
-            Map(x => x.AbrechnungsZeitraum);
+            Component(x=> x.AbrechnungsZeitraum, m => 
+            {
+                m.Map(a => a.Monat);
+                m.Map(a => a.Jahr);
+            });
             Map(x => x.Bezahlt);
 
             References(x => x.Kunde);

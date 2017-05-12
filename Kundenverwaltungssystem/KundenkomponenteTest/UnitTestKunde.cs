@@ -25,7 +25,7 @@ namespace KundenkomponenteTest
         [ClassInitialize]
         public static void ClassInit(TestContext t)
         {
-            ps = new HibernateService();
+            ps = new NHibernateService();
             ts = (ITransactionService) ps;
 
             ms = new MitarbeiterkomponenteFacade(ps, ts);
@@ -47,7 +47,7 @@ namespace KundenkomponenteTest
             {
                 Vorname = "Klaus",
                 Nachname = "Müller",
-                Adresse = new AdressTyp("Berliner Tor", "7", "22091", "Hamburg"),
+                Adresse = new AdresseTyp("Berliner Tor", "7", "22091", "Hamburg"),
                 EmailAdresse = new EmailTyp("bla@test.de"),
                 Geburtsdatum = new DateTime(1990, 01, 01),
                 Kundenstatus = Kundenstatus.Basic,
@@ -55,10 +55,10 @@ namespace KundenkomponenteTest
             };
         }
 
-        [TestCleanup]
-        public void After()
+        [ClassCleanup]
+        public static void After()
         {
-            ps.DeleteAll<Kunde>();
+            ps.Delete(r1);
         }
 
         [TestMethod]
@@ -66,6 +66,7 @@ namespace KundenkomponenteTest
         {
             ks.CreateKunde(k1, r1.ID);
             Assert.IsTrue(k1.Kundennummer != 0);
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -75,6 +76,7 @@ namespace KundenkomponenteTest
 
             Kunde k2 = ks.FindKundeById(k1.Kundennummer);
             Assert.AreEqual(k1, k2);
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -85,7 +87,7 @@ namespace KundenkomponenteTest
                        {
                             Vorname = "Klaus",
                             Nachname = "ddd",
-                            Adresse = new AdressTyp("Berliner Tor", "7", "22091", "Hamburg"),
+                            Adresse = new AdresseTyp("Berliner Tor", "7", "22091", "Hamburg"),
                             EmailAdresse = new EmailTyp("dds@test.de"),
                             Geburtsdatum = new DateTime(1990, 01, 01),
                             Kundenstatus = Kundenstatus.Basic,
@@ -95,6 +97,8 @@ namespace KundenkomponenteTest
             IList<Kunde> expected = new List<Kunde>(new [] {k1, k2});
             IList<Kunde> kunden = ((IKundenServicesFuerKurse) ks).GetKundenByIds(new []{k1.Kundennummer, k2.Kundennummer}.ToList());
             CollectionAssert.AreEqual(expected.ToList(), kunden.ToList());
+            ps.Delete(k1);
+            ps.Delete(k2);
         }
 
         [TestMethod]
@@ -108,6 +112,7 @@ namespace KundenkomponenteTest
             Kunde k2 = ks.FindKundeById(k1.Kundennummer);
             Assert.AreEqual(k1, k2);
             //Assert.IsTrue(k1.Kundennummer != 0);
+            ps.Delete(k1);
         }
 
         [TestMethod]
@@ -124,6 +129,7 @@ namespace KundenkomponenteTest
             ks.CreateKunde(k1, r1.ID);
             ks.SetzeKundenStatus(k1, Kundenstatus.Premium);
             Assert.IsTrue(k1.Kundennummer != 0);
+            ps.Delete(k1);
         }
     }
 }

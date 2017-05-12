@@ -18,7 +18,7 @@ namespace MitarbeiterkomponenteTest
         [ClassInitialize]
         public static void ClassInit(TestContext t)
         {
-            ps = new HibernateService();
+            ps = new NHibernateService();
             ts = (ITransactionService)ps;
             ms = new MitarbeiterkomponenteFacade(ps, ts);
 
@@ -40,18 +40,19 @@ namespace MitarbeiterkomponenteTest
             };
         }
 
-        [TestCleanup]
-        public void After()
-        {
-            ps.DeleteAll<Rezeptionist>();
-            ps.DeleteAll<Trainer>();
-        }
+        //[TestCleanup]
+        //public void After()
+        //{
+        //    ps.Delete(r1);
+        //    ps.Delete(t1);
+        //}
 
         [TestMethod]
         public void TestCreateRezeptionist()
         {
             ms.CreateRezeptionist(r1);
             Assert.IsTrue(r1.ID != 0);
+            ps.Delete(r1);
         }
 
         [TestMethod]
@@ -59,6 +60,7 @@ namespace MitarbeiterkomponenteTest
         {
             ms.CreateTrainer(t1);
             Assert.IsTrue(t1.ID != 0);
+            ps.Delete(t1);
         }
 
         [TestMethod]
@@ -68,6 +70,7 @@ namespace MitarbeiterkomponenteTest
 
             Rezeptionist r2 = ms.FindRezeptionistById(r1.ID);
             Assert.AreEqual(r1, r2);
+            ps.Delete(r1);
         }
 
         [TestMethod]
@@ -77,6 +80,7 @@ namespace MitarbeiterkomponenteTest
 
             Trainer t2 = ms.FindTrainerById(t1.ID);
             Assert.AreEqual(t1, t2);
+            ps.Delete(t1);
         }
 
         [TestMethod]
@@ -89,6 +93,7 @@ namespace MitarbeiterkomponenteTest
 
             Rezeptionist r2 = ms.FindRezeptionistById(r1.ID);
             Assert.AreEqual(r1, r2);
+            ps.Delete(r1);
         }
 
         [TestMethod]
@@ -101,6 +106,7 @@ namespace MitarbeiterkomponenteTest
 
             Trainer t2 = ms.FindTrainerById(t1.ID);
             Assert.AreEqual(t1, t2);
+            ps.Delete(t1);
         }
 
         [TestMethod]

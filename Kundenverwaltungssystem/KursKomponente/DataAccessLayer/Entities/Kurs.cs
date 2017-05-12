@@ -63,18 +63,15 @@ namespace KursKomponente.DataAccessLayer
             Map(x => x.Titel);
             Map(x => x.Beschreibung);
             Map(x => x.MaximaleTeilnehmeranzahl);
-
             Component(x => x.Veranstaltungszeit, m =>
             {
                 m.Map(v => v.StartZeitpunkt);
                 m.Map(v => v.EndZeitpunkt);
             });
             Map(x => x.Kursstatus);
-
-            HasManyToMany(x => x.Teilnehmer);
-
-            References(x => x.Kursleiter).Cascade.SaveUpdate();
-            References(x => x.AngelegtVon).Cascade.SaveUpdate();
+            HasManyToMany(x => x.Teilnehmer).Not.LazyLoad().Fetch.Join(); // lädt Teilnehmer über ein Outer-Join
+            References(x => x.Kursleiter);
+            References(x => x.AngelegtVon);
 
         }
     }
